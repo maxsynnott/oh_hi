@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet } from 'react-native'
 
+import store from './store'
+
 export default class Timer extends Component {
 	state = {
 		time: 0
@@ -8,7 +10,9 @@ export default class Timer extends Component {
 
 	componentDidMount() {
     setInterval(() => {
-      this.setState({time: this.state.time + 1})
+    	if (!store.getState().gameOver) {
+    		this.setState({time: this.state.time + 1})
+    	}
     }, 1000)
   }
 

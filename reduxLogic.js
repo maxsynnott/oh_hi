@@ -8,6 +8,7 @@ for (let i = 0; i < 10; i++) {
 }
 
 const initialState = {
+	gameOver: false,
 	tiles: random_tiles
 }
 
@@ -21,8 +22,24 @@ export const reducer = (state = initialState, action) => {
 			tiles[y][x] = payload
 			return state
 		case 'gameCheck':
-			console.log('checking Game')
-			return
+			let gameOver = true;
+
+			// Check if any tiles are empty
+			Object.keys(tiles).forEach((y) => {
+				Object.keys(tiles[y]).forEach((x) => {
+					console.log(tiles[y][x] == 0)
+					if (tiles[y][x] === 0) {
+						gameOver = false;
+					}
+				})
+			})
+
+			console.log(gameOver)
+			
+			return {
+				...state,
+				gameOver: gameOver
+			}
 	}
 	
 	return state
