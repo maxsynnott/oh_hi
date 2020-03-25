@@ -12,16 +12,16 @@ export default class App extends Component {
       <View style={styles.container}>
         <Timer/>
 
-        <Row/>
-        <Row/>
-        <Row/>
-        <Row/>
-        <Row/>
-        <Row/>
-        <Row/>
-        <Row/>
-        <Row/>
-        <Row/>
+        <Row y={0}/>
+        <Row y={1}/>
+        <Row y={2}/>
+        <Row y={3}/>
+        <Row y={4}/>
+        <Row y={5}/>
+        <Row y={6}/>
+        <Row y={7}/>
+        <Row y={8}/>
+        <Row y={9}/>
       </View>
     );
   }
