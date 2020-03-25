@@ -23,18 +23,88 @@ export const reducer = (state = initialState, action) => {
 			return state
 		case 'gameCheck':
 			let gameOver = true;
+			const size = 10;
 
 			// Check if any tiles are empty
-			Object.keys(tiles).forEach((y) => {
-				Object.keys(tiles[y]).forEach((x) => {
-					console.log(tiles[y][x] == 0)
+			let tilesFilled = true;
+			for (let y = 0; y < size; y++) {
+				for (let x = 0; x < size; x++) {
 					if (tiles[y][x] === 0) {
-						gameOver = false;
+						tilesFilled = false;
 					}
-				})
-			})
+				}
+			}
 
-			console.log(gameOver)
+			// Check if all rows are even
+			let rowsEven = true;
+			if (tilesFilled) {
+				for (let y = 0; y < size; y++) {
+					const row = Object.values(tiles[y])
+
+					if (row.filter(i => i == 1).length != row.filter(i => i == 2).length) {
+						rowsEven = false
+					}
+				}
+			}
+
+			// Check if all columns are even
+			let columnsEven = true;
+			if (tilesFilled && rowsEven) {
+				const rows = Object.values(tiles)
+
+				for (let x = 0; x < size; x++) {
+					if (rows.filter(row => row[x] == 1).length != rows.filter(row => row[x] == 2).length) {
+						columnsEven = false;
+					}
+				}
+			}
+
+			let noThrees = true;
+			if (tilesFilled && rowsEven && columnsEven) {
+				for (let y = 0; y < size; y++) {
+					for (let x = 0; x < size; x++) {
+						const target = tiles[y][x]
+
+						if (y > 1) {
+							if (tiles[y - 2][x] == target && tiles[y - 1][x] == target) {
+								noThrees = false;
+							}
+						}
+
+						if (y > 0 && y < size - 1) {
+							if (tiles[y - 1][x] == target && tiles[y + 1][x] == target) {
+								noThrees = false;
+							}
+						}
+
+						if (y < size - 2) {
+							if (tiles[y + 1][x] == target && tiles[y + 2][x] == target) {
+								noThrees = false;
+							}
+						}
+						
+						if (x > 1) {
+							if (tiles[y][x - 2] == target && tiles[y][x - 1] == target) {
+								noThrees = false;
+							}
+						}
+
+						if (x > 0 && x < size - 1) {
+							if (tiles[y][x - 1] == target && tiles[y][x + 1] == target) {
+								noThrees = false;
+							}
+						}
+
+						if (x < size - 2) {
+							if (tiles[y][x + 1] == target && tiles[y][x + 2] == target) {
+								noThrees = false;
+							}
+						}
+					}
+				}
+			}
+
+			gameOver = (tilesFilled && rowsEven && columnsEven && noThrees)
 			
 			return {
 				...state,

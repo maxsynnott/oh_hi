@@ -24,7 +24,9 @@ export default class Tile extends Component {
 
 		const nextIndex = (colorIndex + 1) % colors.length
 
-		store.dispatch({x: x, y: y, type: 'tileUpdate', payload: nextIndex})
+		store.dispatch({ x: x, y: y, type: 'tileUpdate', payload: nextIndex })
+
+		store.dispatch({ type: 'gameCheck' })
 	}
 
 	render() {
