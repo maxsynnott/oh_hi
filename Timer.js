@@ -5,22 +5,25 @@ import store from './store'
 
 export default class Timer extends Component {
 	state = {
-		time: 0
+		time: 0,
+		color: 'black'
 	}
 
 	componentDidMount() {
     setInterval(() => {
     	if (!store.getState().gameOver) {
-    		this.setState({time: this.state.time + 1})
+    		this.setState({ time: this.state.time + 1, color: 'black' })
+    	} else {
+    		this.setState({ color: 'red' })
     	}
     }, 1000)
   }
 
 	render() {
-		const { time } = this.state
+		const { time, color } = this.state
 
 		return (
-			<Text style={styles.timer}>
+			<Text style={[styles.timer, { color: color }]}>
 				{new Date(time * 1000).toISOString().substr(14, 5)}
 			</Text>
 		)

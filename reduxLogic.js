@@ -23,7 +23,8 @@ export const reducer = (state = initialState, action) => {
 			tiles[y][x] = payload
 			return state
 		case 'gameCheck':
-			let gameOver = true;
+			// This whole function is very inefficient. Not concerned as just learning/practicing with react-native.
+
 			const size = 10;
 
 			// Check if any tiles are empty
@@ -56,6 +57,7 @@ export const reducer = (state = initialState, action) => {
 				}
 			}
 
+			// Check there are no threes in rows
 			let noRowThrees = true;
 			if (tilesFilled && rowsEven && columnsEven) {
 				tiles.forEach((row) => {
@@ -67,6 +69,7 @@ export const reducer = (state = initialState, action) => {
 				})
 			}
 
+			// Check there are no threes in columns
 			let noColumnThrees = true;
 			if (tilesFilled && rowsEven && columnsEven && noRowThrees) {
 				for (let x = 0; x < size; x++) {
@@ -78,8 +81,7 @@ export const reducer = (state = initialState, action) => {
 				}
 			}
 			
-
-			gameOver = (tilesFilled && rowsEven && columnsEven && noRowThrees && noColumnThrees)
+			const gameOver = (tilesFilled && rowsEven && columnsEven && noRowThrees && noColumnThrees)
 			
 			return {
 				...state,
