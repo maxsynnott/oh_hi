@@ -1,10 +1,11 @@
-const random_tiles = {}
+const random_tiles = []
 
 for (let i = 0; i < 10; i++) {
-	random_tiles[i] = {}
+	const row = []
 	for (let j = 0; j < 10; j++) {
-		random_tiles[i][j] = Math.floor(Math.random() * 3)
+		row.push(Math.floor(Math.random() * 3))
 	}
+	random_tiles.push(row)
 }
 
 const initialState = {
@@ -27,84 +28,58 @@ export const reducer = (state = initialState, action) => {
 
 			// Check if any tiles are empty
 			let tilesFilled = true;
-			for (let y = 0; y < size; y++) {
-				for (let x = 0; x < size; x++) {
-					if (tiles[y][x] === 0) {
+			tiles.forEach((row) => {
+				row.forEach((tile) => {
+					if (tile == 0) {
 						tilesFilled = false;
 					}
-				}
-			}
+				})
+			})
 
 			// Check if all rows are even
 			let rowsEven = true;
 			if (tilesFilled) {
-				for (let y = 0; y < size; y++) {
-					const row = Object.values(tiles[y])
-
-					if (row.filter(i => i == 1).length != row.filter(i => i == 2).length) {
-						rowsEven = false
+				tiles.forEach((row) => {
+					if (row.filter(tile => tile == 1).length != row.filter(tile => tile == 2)) {
+						columnsEven = false;
 					}
-				}
+				})
 			}
 
 			// Check if all columns are even
 			let columnsEven = true;
 			if (tilesFilled && rowsEven) {
-				const rows = Object.values(tiles)
-
 				for (let x = 0; x < size; x++) {
-					if (rows.filter(row => row[x] == 1).length != rows.filter(row => row[x] == 2).length) {
+					if (tiles.filter(row => row[x] == 1).length != tiles.filter(row => row[x] == 2).length) {
 						columnsEven = false;
 					}
 				}
 			}
 
-			let noThrees = true;
+			let noRowThrees = true;
 			if (tilesFilled && rowsEven && columnsEven) {
-				for (let y = 0; y < size; y++) {
-					for (let x = 0; x < size; x++) {
-						const target = tiles[y][x]
-
-						if (y > 1) {
-							if (tiles[y - 2][x] == target && tiles[y - 1][x] == target) {
-								noThrees = false;
-							}
+				tiles.forEach((row) => {
+					for (let x = 0; x < size - 2; x++) {
+						if (row[x] == row[x + 1] && row[x + 1] == row[x + 2]) {
+							noRowThrees = false;
 						}
+					}
+				})
+			}
 
-						if (y > 0 && y < size - 1) {
-							if (tiles[y - 1][x] == target && tiles[y + 1][x] == target) {
-								noThrees = false;
-							}
-						}
-
-						if (y < size - 2) {
-							if (tiles[y + 1][x] == target && tiles[y + 2][x] == target) {
-								noThrees = false;
-							}
-						}
-						
-						if (x > 1) {
-							if (tiles[y][x - 2] == target && tiles[y][x - 1] == target) {
-								noThrees = false;
-							}
-						}
-
-						if (x > 0 && x < size - 1) {
-							if (tiles[y][x - 1] == target && tiles[y][x + 1] == target) {
-								noThrees = false;
-							}
-						}
-
-						if (x < size - 2) {
-							if (tiles[y][x + 1] == target && tiles[y][x + 2] == target) {
-								noThrees = false;
-							}
+			let noColumnThrees = true;
+			if (tilesFilled && rowsEven && columnsEven && noRowThrees) {
+				for (let x = 0; x < size; x++) {
+					for (let y = 0; y < size - 2; y++) {
+						if (tiles[y][x] == tiles[y + 1][x] && tiles[y + 1][x] == tiles[y + 2][x]) {
+							noColumnThrees = false;
 						}
 					}
 				}
 			}
+			
 
-			gameOver = (tilesFilled && rowsEven && columnsEven && noThrees)
+			gameOver = (tilesFilled && rowsEven && columnsEven && noRowThrees && noColumnThrees)
 			
 			return {
 				...state,
